@@ -4,16 +4,18 @@ import {
     Column,
     CreateDateColumn,
     BeforeInsert,
+    OneToMany,
   } from 'typeorm';
   import * as bcrypt from 'bcryptjs';
   import * as jwt from 'jsonwebtoken';
+import { IdeaEntity } from 'src/idea/entities/idea.entity';
   
 
   
   @Entity('user')
   export class UserEntity {
     @PrimaryGeneratedColumn()
-    id: string;
+    id: number;
   
     @CreateDateColumn()
     created: Date;
@@ -29,6 +31,9 @@ import {
 
     @Column('text') 
     password: string;
+
+    @OneToMany(()=>IdeaEntity,(idea)=>idea.author)
+    ideas:IdeaEntity[];
 
     @BeforeInsert()
     async hashPassword() {
