@@ -5,6 +5,8 @@ import {
     CreateDateColumn,
     BeforeInsert,
     OneToMany,
+    ManyToMany,
+    JoinTable,
   } from 'typeorm';
   import * as bcrypt from 'bcryptjs';
   import * as jwt from 'jsonwebtoken';
@@ -34,6 +36,10 @@ import { IdeaEntity } from 'src/idea/entities/idea.entity';
 
     @OneToMany(()=>IdeaEntity,(idea)=>idea.author)
     ideas:IdeaEntity[];
+
+    @ManyToMany(()=>IdeaEntity,{cascade:true})
+    @JoinTable({name:"bookmarks"})
+    bookmarks:IdeaEntity[];
 
     @BeforeInsert()
     async hashPassword() {

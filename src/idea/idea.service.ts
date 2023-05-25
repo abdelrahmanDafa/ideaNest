@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { IdeaEntity } from "./entities/idea.entity";
 import { Repository } from "typeorm";
@@ -63,11 +63,49 @@ export class IdeaService {
       if(!idea){
         throw new NotFoundException("idea not found")
      }
-     
      this.ensureOwnership(idea,userId)
      await this.ideaRepository.delete({id});
      return idea;  
     }
+
+   async bookmarkIdea(id:number,userId){
+    const user = await this.userRepository.findOne(
+      {
+        where:{id:userId},
+        relations:["bookmarks"]
+      }
+      )
+    const idea = await this.ideaRepository.findOne({where:{id}})
+    const isIdeaBookmarked = user.bookmarks.find((bookmark)=>bookmark.id === idea.id)
+    if(isIdeaBookmarked)
+    throw new BadRequestException("you already bookmared this idea")
+
+    user.bookmarks.push(idea)
+    await this.userRepository.save(user)
+    return user
+   }
+
+
+   async unbookmarkIdea(id:number,userId){
+    const user = await this.userRepository.findOne(
+      {
+        where:{id:userId},
+        relations:["bookmarks"]
+      }
+      )
+      const idea = await this.ideaRepository.findOne({where:{id}})
+      const isIdeaBookmarked = user.bookmarks.find((bookmark)=>bookmark.id === idea.id)
+      if(!isIdeaBookmarked)
+      throw new BadRequestException("you already unbookmared this idea")
+
+      user.bookmarks = user.bookmarks.filter(bookmark=> bookmark.id!==id)
+      console.log("user.bookmarks",id,user.bookmarks);
+      
+      await this.userRepository.save(user)
+      return user
+   }
+
+
 
     private ensureOwnership(idea:IdeaEntity,ownerId:number){
         if(idea.author.id !== ownerId)

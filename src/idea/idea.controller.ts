@@ -47,4 +47,20 @@ export class IdeaController{
         ){
         return this.ideaService.deleteSingleIdea(id,userId)
     }
+
+    @Post(":id/bookmark")
+    bookmarkIdea(
+        @Param("id",ParseIntPipe) id:number,
+        @CurrentUser('id') userId:number,
+    ){
+       return this.ideaService.bookmarkIdea(id,userId)
+    }
+
+    @Delete(":id/bookmark")
+    unbookmarkIdea(
+        @Param("id",ParseIntPipe) id:number,
+        @CurrentUser('id') userId:number,
+    ){
+        return this.ideaService.unbookmarkIdea(id,userId)
+    }
 }
