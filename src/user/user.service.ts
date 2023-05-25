@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -36,9 +36,18 @@ export class UserService {
 
         if(!isCorrectPassword)
         throw new BadRequestException("invalid username or password")
-        console.log("isCorrectPassword",isCorrectPassword);
+
 
         const token = await user.generateToken()
         return {message:"loged in successfully",user,token}
+    }
+
+    async findUser(username:string)
+    {
+        const user:UserEntity = await this.userRepository.findOne({where:{username}}) 
+        if(!user)
+        throw new NotFoundException("User not found")
+        return user;
+
     }
 }

@@ -1,15 +1,21 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { LoginUserDto } from './dto/login-user.dto';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { UserEntity } from './entities/user.entity';
+import { AuthGuard } from 'src/shared/auth.guard';
 
 @Controller()
 export class UserController {
 
     constructor(private userService:UserService){}
 
+    @UseGuards(AuthGuard)
     @Get('api/users')
-    showAllUsers() {
+    showAllUsers(@CurrentUser() user:UserEntity) {
+      console.log("cc",user);
+      
       return this.userService.showAll();
     }
     @Post('auth/login')
