@@ -5,6 +5,7 @@ import { Repository } from "typeorm";
 import { CreateIdeaDto } from "./dto/createIdea.dto";
 import { UpdateIdeaDto } from "./dto/updateIdea.dto";
 import { UserEntity } from "src/user/entities/user.entity";
+import { Votes } from "src/shared/votes.enum";
 
 
 @Injectable()
@@ -106,6 +107,34 @@ export class IdeaService {
    }
 
 
+   private async vote(idea: IdeaEntity, user: UserEntity, vote: Votes) {
+    const opposite = vote === Votes.UP ? Votes.DOWN : Votes.UP;
+    if (
+      idea[opposite].filter(voter => voter.id === user.id).length > 0 ||
+      idea[vote].filter(voter => voter.id === user.id).length > 0
+    ) {
+      idea[opposite] = idea[opposite].filter(voter => voter.id !== user.id);
+      idea[vote] = idea[vote].filter(voter => voter.id !== user.id);
+      await this.ideaRepository.save(idea);
+    } else if (idea[vote].filter(voter => voter.id === user.id).length < 1) {
+      idea[vote].push(user);
+      await this.ideaRepository.save(idea);
+    } else {
+      throw new BadRequestException("unable to vote")
+    }
+
+    return idea;
+  }
+  async toggleVote(id: number, userId: number,vote:Votes) {
+    let idea = await this.ideaRepository.findOne({
+      where: { id },
+      relations: ['author', 'upvotes', 'downvotes'],
+    });
+    const user = await this.userRepository.findOne({ where: { id: userId } });
+    idea = await this.vote(idea, user, vote);
+
+    return idea;
+  }
 
     private ensureOwnership(idea:IdeaEntity,ownerId:number){
         if(idea.author.id !== ownerId)

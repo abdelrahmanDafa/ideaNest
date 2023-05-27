@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import { ClassSerializerInterceptor, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,11 +9,13 @@ import { HttpErrorFilter } from './shared/http-error.filter';
 import { LoggingInterceptor } from './shared/logging.interceptor';
 import { UserModule } from './user/user.module';
 import { AuthMiddleware } from './shared/auth.middleware';
+import { CommentModule } from './comment/comment.module';
 @Module({
   imports: [
     TypeOrmModule.forRoot(ormConfig),
     IdeaModule,
-    UserModule
+    UserModule,
+    CommentModule
   ],
   controllers: [AppController],
   providers: [
@@ -25,6 +27,10 @@ import { AuthMiddleware } from './shared/auth.middleware';
     {
       provide:APP_INTERCEPTOR,
       useClass:LoggingInterceptor
+    },
+    {
+      provide:APP_INTERCEPTOR,
+      useClass:ClassSerializerInterceptor
     }
   ],
 })

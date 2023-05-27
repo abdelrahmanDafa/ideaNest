@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from "@nestjs/common";
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards, UseInterceptors } from "@nestjs/common";
 import { IdeaService } from "./idea.service";
 import { CreateIdeaDto } from "./dto/createIdea.dto";
 import { UpdateIdeaDto } from "./dto/updateIdea.dto";
 import { AuthGuard } from "src/shared/auth.guard";
 import { CurrentUser } from "src/user/decorators/current-user.decorator";
+import { Votes } from "src/shared/votes.enum";
 
 
 @UseGuards(AuthGuard)
@@ -62,5 +63,22 @@ export class IdeaController{
         @CurrentUser('id') userId:number,
     ){
         return this.ideaService.unbookmarkIdea(id,userId)
+    }
+
+
+    @Post(":id/vote")
+    upvoteIdea(
+        @Param("id",ParseIntPipe) id:number,
+        @CurrentUser('id') userId:number,
+    ){
+       return this.ideaService.toggleVote(id,userId,Votes.UP)
+    }
+
+    @Delete(":id/vote")
+    downvoteIdea(
+        @Param("id",ParseIntPipe) id:number,
+        @CurrentUser('id') userId:number,
+    ){
+        return this.ideaService.toggleVote(id,userId,Votes.DOWN)
     }
 }

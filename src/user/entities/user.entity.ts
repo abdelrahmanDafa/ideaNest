@@ -11,6 +11,7 @@ import {
   import * as bcrypt from 'bcryptjs';
   import * as jwt from 'jsonwebtoken';
 import { IdeaEntity } from 'src/idea/entities/idea.entity';
+import { Exclude } from 'class-transformer';
   
 
   
@@ -31,6 +32,7 @@ import { IdeaEntity } from 'src/idea/entities/idea.entity';
     @Column('text')
     name: string;
 
+    @Exclude()
     @Column('text') 
     password: string;
 
