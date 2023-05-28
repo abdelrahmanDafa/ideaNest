@@ -1,5 +1,5 @@
-import { CommentEntity } from "src/comment/entities/comment.entity";
-import { UserEntity } from "src/user/entities/user.entity";
+import { CommentEntity } from "../../comment/entities/comment.entity";
+import { UserEntity } from "../../user/entities/user.entity";
 import { CreateDateColumn, Entity, PrimaryGeneratedColumn ,Column, ManyToOne, JoinColumn, ManyToMany, JoinTable, OneToMany} from "typeorm";
 
 

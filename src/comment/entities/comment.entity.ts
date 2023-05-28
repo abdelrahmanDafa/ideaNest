@@ -1,5 +1,5 @@
-import { IdeaEntity } from "src/idea/entities/idea.entity";
-import { UserEntity } from "src/user/entities/user.entity";
+import { IdeaEntity } from "../../idea/entities/idea.entity";
+import { UserEntity } from "../../user/entities/user.entity";
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 

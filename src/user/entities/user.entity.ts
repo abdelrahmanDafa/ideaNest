@@ -10,7 +10,7 @@ import {
   } from 'typeorm';
   import * as bcrypt from 'bcryptjs';
   import * as jwt from 'jsonwebtoken';
-import { IdeaEntity } from 'src/idea/entities/idea.entity';
+import { IdeaEntity } from '../../idea/entities/idea.entity';
 import { Exclude } from 'class-transformer';
   
 
@@ -45,9 +45,7 @@ import { Exclude } from 'class-transformer';
 
     @BeforeInsert()
     async hashPassword() {
-        const hasgedPassword = await bcrypt.hash(this.password, 10);
-        console.log("user entity",this.password,hasgedPassword);
-        
+       const hasgedPassword = await bcrypt.hash(this.password, 10);
        this.password = hasgedPassword
     }
    async isCorrectPassword(password:string){
@@ -61,6 +59,7 @@ import { Exclude } from 'class-transformer';
       process.env.SECRET,
       {expiresIn:"1d"}
     )
+    
     return token;
    }
  

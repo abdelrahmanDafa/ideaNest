@@ -4,8 +4,8 @@ import { IdeaEntity } from "./entities/idea.entity";
 import { Repository } from "typeorm";
 import { CreateIdeaDto } from "./dto/createIdea.dto";
 import { UpdateIdeaDto } from "./dto/updateIdea.dto";
-import { UserEntity } from "src/user/entities/user.entity";
-import { Votes } from "src/shared/votes.enum";
+import { UserEntity } from "../user/entities/user.entity";
+import { Votes } from "../shared/votes.enum";
 
 
 @Injectable()
@@ -18,12 +18,14 @@ export class IdeaService {
     private userRepository:Repository<UserEntity>
     ){}
 
-   async getIdeas(id?:number){
+   async getIdeas(id?:number,page:number=1,limit:number=3){
         let where = {}
         if(id)
         where = {author:{id}}
         return await this.ideaRepository.find({
-          where
+          where,
+          take:limit,
+          skip:limit*(page-1)
         })
     }
 

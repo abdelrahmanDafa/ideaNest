@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, UseGuards } from '@nestjs/common';
-import { AuthGuard } from 'src/shared/auth.guard';
-import { CurrentUser } from 'src/user/decorators/current-user.decorator';
+import { AuthGuard } from '../shared/auth.guard';
+import { CurrentUser } from '../user/decorators/current-user.decorator';
 import { CommentService } from './comment.service';
 import { CreateCommentDto } from './dtos/creatCommentDto';
 import { UpdateCommentDto } from './dtos/updateComment.dto';

@@ -3,7 +3,7 @@ import { IdeaController } from "./idea.controller";
 import { IdeaService } from "./idea.service";
 import { IdeaEntity } from "./entities/idea.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { UserEntity } from "src/user/entities/user.entity";
+import { UserEntity } from "../user/entities/user.entity";
 
 
 @Module({

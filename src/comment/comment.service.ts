@@ -2,9 +2,9 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentEntity } from './entities/comment.entity';
 import { Repository } from 'typeorm';
-import { IdeaEntity } from 'src/idea/entities/idea.entity';
+import { IdeaEntity } from '../idea/entities/idea.entity';
 import { CreateCommentDto } from './dtos/creatCommentDto';
-import { UserEntity } from 'src/user/entities/user.entity';
+import { UserEntity } from '../user/entities/user.entity';
 import { UpdateCommentDto } from './dtos/updateComment.dto';
 
 @Injectable()
