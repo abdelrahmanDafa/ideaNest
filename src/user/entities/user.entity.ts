@@ -11,12 +11,15 @@ import {
   import * as bcrypt from 'bcryptjs';
   import * as jwt from 'jsonwebtoken';
 import { IdeaEntity } from '../../idea/entities/idea.entity';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
   
 
   
   @Entity('user')
   export class UserEntity {
+    constructor(private jwtService:JwtService){}
     @PrimaryGeneratedColumn()
     id: number;
   
@@ -54,13 +57,14 @@ import { Exclude } from 'class-transformer';
 
    async generateToken(){
     const {id,username} = this;
-    const token = await jwt.sign(
-      {id,username} ,
-      process.env.SECRET,
-      {expiresIn:"1d"}
-    )
-    
+    console.log("this.jwtService",this.jwtService);
+    const token = this.jwtService.sign({id,username},{expiresIn:"1d"}) 
     return token;
    }
- 
+   //@Expose()
+   toJSON(): any {
+     return {
+       ...this,
+     };
+   }
 }

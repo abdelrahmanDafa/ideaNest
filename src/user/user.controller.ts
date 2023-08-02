@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Post, Req, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -27,8 +27,14 @@ export class UserController {
 
     @HttpCode(HttpStatus.OK)
     @Post('auth/login')
-    login(@Body() data: LoginUserDto) {
-      return this.userService.login(data);
+    async login(@Body() data: LoginUserDto) {
+      try {
+        const loginUser =  await this.userService.login(data);
+        return loginUser
+      } catch (error) {
+        throw new UnauthorizedException(error.message || "Invalid email or password")
+      }
+      
     }
   
     @Post('auth/register')
